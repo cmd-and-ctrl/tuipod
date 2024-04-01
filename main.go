@@ -5,32 +5,35 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/minchao/go-apple-music"
 )
 
 type model struct {
 	list      list.Model
 	spinner   spinner.Model
 	textInput textinput.Model
-	currentTrack *applemusic.Track
+	currentTrack *Track
 
 	ipodUI *IPodUI
 }
 
-func initialModel() model {
-	return model{
-		list:      list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0),
-		spinner:   spinner.New(),
-		textInput: textinput.New(),
-		currentTrack: &applemusic.Track{},
+func (m model) View() string {
+	return m.ipodUI.Render() 
+}
 
-		ipodUI: NewIPodUI(),
-	}
+type Track struct {}
+
+type IPodUI struct {}
+
+func (i *IPodUI) Render() string {
+	return ""
+}
+
+func NewIPodUI() *IPodUI {
+	return &IPodUI{}
 }
 
 func (m model) Init() tea.Cmd {
@@ -48,9 +51,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	m.ipodUI.Render() // Render UI
-
 	return m, cmd
+}
+
+func initialModel() model {
+	return model{
+		list:      list.New([]list.Item{}, list.NewDefaultDelegate(), 0, 0),
+		spinner:   spinner.New(),
+		textInput: textinput.New(),
+		currentTrack: &Track{},
+
+		ipodUI: NewIPodUI(),
+	}
 }
 
 func main() {
